@@ -74,6 +74,9 @@ _TEMPLATE = jinja2.Template("""
        chart_series_{{ series.series_name }}.setMarkers(
          {{ series.markers }}
        );
+       chart_series_{{ series.series_name }}.priceScale().applyOptions({
+          {{ series.scaleMargins }}
+       });
        {% for price_line in series.price_lines %}
        chart_series_{{ series.series_name }}.createPriceLine({{ price_line }});
        {% endfor %}
