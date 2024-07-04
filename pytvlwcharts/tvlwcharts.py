@@ -75,7 +75,7 @@ _TEMPLATE = jinja2.Template("""
          {{ series.markers }}
        );
        chart_series_{{ series.series_name }}.priceScale().applyOptions({
-          {{ series.price_scale.to_json() }}
+          {{ series.price_scale }}
        });
        {% for price_line in series.price_lines %}
        chart_series_{{ series.series_name }}.createPriceLine({{ price_line }});
@@ -185,7 +185,7 @@ _TEMPLATES = jinja2.Template("""
          {{ series.markers }}
        );
        chart_series_{{ series.series_name }}.priceScale().applyOptions({
-          {{ series.price_scale.to_json() }}
+          {{ series.price_scale }}
        });
        {% for price_line in series.price_lines %}
        chart_series_{{ series.series_name }}.createPriceLine({{ price_line }});
