@@ -74,9 +74,9 @@ _TEMPLATE = jinja2.Template("""
        chart_series_{{ series.series_name }}.setMarkers(
          {{ series.markers }}
        );
-       chart_series_{{ series.series_name }}.priceScale().applyOptions({
+       chart_series_{{ series.series_name }}.priceScale().applyOptions(
           {{ series.price_scale }}
-       });
+       );
        {% for price_line in series.price_lines %}
        chart_series_{{ series.series_name }}.createPriceLine({{ price_line }});
        {% endfor %}
@@ -184,9 +184,9 @@ _TEMPLATES = jinja2.Template("""
        chart_series_{{ series.series_name }}.setMarkers(
          {{ series.markers }}
        );
-       chart_series_{{ series.series_name }}.priceScale().applyOptions({
+       chart_series_{{ series.series_name }}.priceScale().applyOptions(
           {{ series.price_scale }}
-       });
+       );
        {% for price_line in series.price_lines %}
        chart_series_{{ series.series_name }}.createPriceLine({{ price_line }});
        {% endfor %}
@@ -321,13 +321,12 @@ class _Markers:
 
 class Series:
 
-  def __init__(self, chart, data: pd.DataFrame, series_name: str, series_type: str, price_scale: Optional[PriceScaleOptions] = None, **kwargs):
+  def __init__(self, chart, data: pd.DataFrame, series_name: str, series_type: str, price_scale: PriceScaleOptions = None, **kwargs):
     self._chart = chart
     self.series_name = series_name
     self.series_type = series_type
     self._data = data
-    if price_scale:
-      self.price_scale = copy.deepcopy(price_scale)
+    self.price_scale = copy.deepcopy(price_scale)
     self.options = kwargs
     self._price_lines = []
     self._single_markers = []
@@ -358,7 +357,7 @@ class Series:
         series_type=self.series_type,
         data=self._data.to_json(orient='records', date_format='iso'),
         options=json.dumps(self.options),
-        price_scale=self.price_scale.to_json() if self.price_scale is not None else None,
+        price_scale=self.price_scale.to_json() if self.price_scale is not None else {},
         price_lines=self._price_lines,
         markers=json.dumps(self._single_markers + list(
             itertools.chain(*[marker._spec() for marker in self._markers]))))
@@ -431,7 +430,7 @@ class Chart:
     self.series.append(series)
     return series
 
-  def mark_line(self, series_name:str = None, data: pd.DataFrame = None, price_scale: Optional[PriceScaleOptions] = None, **kwargs) -> Series:
+  def mark_line(self, series_name:str = None, data: pd.DataFrame = None, price_scale: PriceScaleOptions = None, **kwargs) -> Series:
     """Add A Line Series."""
     return self.add(
         Series(chart=self,
@@ -441,7 +440,7 @@ class Chart:
                price_scale = price_scale,
                **kwargs))
 
-  def mark_area(self, series_name:str = None, data: pd.DataFrame = None, price_scale: Optional[PriceScaleOptions] = None, **kwargs) -> Series:
+  def mark_area(self, series_name:str = None, data: pd.DataFrame = None, price_scale: PriceScaleOptions = None, **kwargs) -> Series:
     """Add An Area Series."""
     return self.add(
         Series(chart=self,
@@ -451,7 +450,7 @@ class Chart:
                price_scale = price_scale,
                **kwargs))
 
-  def mark_bar(self, series_name:str = None, data: pd.DataFrame = None, price_scale: Optional[PriceScaleOptions] = None, **kwargs) -> Series:
+  def mark_bar(self, series_name:str = None, data: pd.DataFrame = None, price_scale: PriceScaleOptions = None, **kwargs) -> Series:
     """Add A Bar Series."""
     return self.add(
         Series(chart=self,
@@ -461,7 +460,7 @@ class Chart:
                price_scale = price_scale,
                **kwargs))
 
-  def mark_candlestick(self, series_name:str = None, data: pd.DataFrame = None, price_scale: Optional[PriceScaleOptions] = None, **kwargs) -> Series:
+  def mark_candlestick(self, series_name:str = None, data: pd.DataFrame = None, price_scale: PriceScaleOptions = None, **kwargs) -> Series:
     """Add A Candlestick series."""
     return self.add(
         Series(chart=self,
@@ -471,7 +470,7 @@ class Chart:
                price_scale = price_scale,
                **kwargs))
 
-  def mark_histogram(self, series_name:str = None, data: pd.DataFrame = None, price_scale: Optional[PriceScaleOptions] = None, **kwargs) -> Series:
+  def mark_histogram(self, series_name:str = None, data: pd.DataFrame = None, price_scale: PriceScaleOptions = None, **kwargs) -> Series:
     """Add A Histogram Series."""
     return self.add(
         Series(chart=self,
