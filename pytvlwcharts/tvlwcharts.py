@@ -357,7 +357,7 @@ class Series:
         series_type=self.series_type,
         data=self._data.to_json(orient='records', date_format='iso'),
         options=json.dumps(self.options),
-        price_scale=json.dumps(self.price_scale),
+        price_scale=self.price_scale.to_json(),
         price_lines=self._price_lines,
         markers=json.dumps(self._single_markers + list(
             itertools.chain(*[marker._spec() for marker in self._markers]))))
