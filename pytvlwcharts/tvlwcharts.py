@@ -75,7 +75,7 @@ _TEMPLATE = jinja2.Template("""
          {{ series.markers }}
        );
        chart_series_{{ series.series_name }}.priceScale().applyOptions({
-          {{ series.scaleMargins }}
+          {{ series.price_scale }}
        });
        {% for price_line in series.price_lines %}
        chart_series_{{ series.series_name }}.createPriceLine({{ price_line }});
@@ -184,6 +184,9 @@ _TEMPLATES = jinja2.Template("""
        chart_series_{{ series.series_name }}.setMarkers(
          {{ series.markers }}
        );
+       chart_series_{{ series.series_name }}.priceScale().applyOptions({
+         {{ series.price_scale }}
+       });
        {% for price_line in series.price_lines %}
        chart_series_{{ series.series_name }}.createPriceLine({{ price_line }});
        {% endfor %}
@@ -317,11 +320,13 @@ class _Markers:
 
 class Series:
 
-  def __init__(self, chart, data: pd.DataFrame, series_name: str, series_type: str, **kwargs):
+  def __init__(self, chart, data: pd.DataFrame, series_name: str, series_type: str, price_scale: Optional[PriceScaleOptions] = None, **kwargs):
     self._chart = chart
     self.series_name = series_name
     self.series_type = series_type
     self._data = data
+    if price_scale:
+      self.price_scale = copy.deepcopy(price_scale)
     self.options = kwargs
     self._price_lines = []
     self._single_markers = []
@@ -424,49 +429,54 @@ class Chart:
     self.series.append(series)
     return series
 
-  def mark_line(self, series_name:str = None, data: pd.DataFrame = None, **kwargs) -> Series:
+  def mark_line(self, series_name:str = None, data: pd.DataFrame = None, price_scale = None, **kwargs) -> Series:
     """Add A Line Series."""
     return self.add(
         Series(chart=self,
                series_name=series_name,
                series_type='Line',
                data=data.drop_duplicates(subset=['time']) if data is not None else self._data,
+               price_scale = price_scale,
                **kwargs))
 
-  def mark_area(self, series_name:str = None, data: pd.DataFrame = None, **kwargs) -> Series:
+  def mark_area(self, series_name:str = None, data: pd.DataFrame = None, price_scale = None, **kwargs) -> Series:
     """Add An Area Series."""
     return self.add(
         Series(chart=self,
                series_name=series_name,
                series_type='Area',
                data=data.drop_duplicates(subset=['time']) if data is not None else self._data,
+               price_scale = price_scale,
                **kwargs))
 
-  def mark_bar(self, series_name:str = None, data: pd.DataFrame = None, **kwargs) -> Series:
+  def mark_bar(self, series_name:str = None, data: pd.DataFrame = None, price_scale = None, **kwargs) -> Series:
     """Add A Bar Series."""
     return self.add(
         Series(chart=self,
                series_name=series_name,
                series_type='Bar',
                data=data.drop_duplicates(subset=['time']) if data is not None else self._data,
+               price_scale = price_scale,
                **kwargs))
 
-  def mark_candlestick(self, series_name:str = None, data: pd.DataFrame = None, **kwargs) -> Series:
+  def mark_candlestick(self, series_name:str = None, data: pd.DataFrame = None, price_scale = None, **kwargs) -> Series:
     """Add A Candlestick series."""
     return self.add(
         Series(chart=self,
                series_name=series_name,
                series_type='Candlestick',
                data=data.drop_duplicates(subset=['time']) if data is not None else self._data,
+               price_scale = price_scale,
                **kwargs))
 
-  def mark_histogram(self, series_name:str = None, data: pd.DataFrame = None, **kwargs) -> Series:
+  def mark_histogram(self, series_name:str = None, data: pd.DataFrame = None, price_scale = None, **kwargs) -> Series:
     """Add A Histogram Series."""
     return self.add(
         Series(chart=self,
                series_name=series_name,
                series_type='Histogram',
                data=data.drop_duplicates(subset=['time']) if data is not None else self._data,
+               price_scale = price_scale,
                **kwargs))
 
   def _spec(self) -> _ChartSpec:
