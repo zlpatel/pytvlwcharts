@@ -429,7 +429,7 @@ class Chart:
     self.series.append(series)
     return series
 
-  def mark_line(self, series_name:str = None, data: pd.DataFrame = None, price_scale = None, **kwargs) -> Series:
+  def mark_line(self, series_name:str = None, data: pd.DataFrame = None, price_scale: Optional[PriceScaleOptions] = None, **kwargs) -> Series:
     """Add A Line Series."""
     return self.add(
         Series(chart=self,
@@ -439,7 +439,7 @@ class Chart:
                price_scale = price_scale,
                **kwargs))
 
-  def mark_area(self, series_name:str = None, data: pd.DataFrame = None, price_scale = None, **kwargs) -> Series:
+  def mark_area(self, series_name:str = None, data: pd.DataFrame = None, price_scale: Optional[PriceScaleOptions] = None, **kwargs) -> Series:
     """Add An Area Series."""
     return self.add(
         Series(chart=self,
@@ -449,7 +449,7 @@ class Chart:
                price_scale = price_scale,
                **kwargs))
 
-  def mark_bar(self, series_name:str = None, data: pd.DataFrame = None, price_scale = None, **kwargs) -> Series:
+  def mark_bar(self, series_name:str = None, data: pd.DataFrame = None, price_scale: Optional[PriceScaleOptions] = None, **kwargs) -> Series:
     """Add A Bar Series."""
     return self.add(
         Series(chart=self,
@@ -459,7 +459,7 @@ class Chart:
                price_scale = price_scale,
                **kwargs))
 
-  def mark_candlestick(self, series_name:str = None, data: pd.DataFrame = None, price_scale = None, **kwargs) -> Series:
+  def mark_candlestick(self, series_name:str = None, data: pd.DataFrame = None, price_scale: Optional[PriceScaleOptions] = None, **kwargs) -> Series:
     """Add A Candlestick series."""
     return self.add(
         Series(chart=self,
@@ -469,7 +469,7 @@ class Chart:
                price_scale = price_scale,
                **kwargs))
 
-  def mark_histogram(self, series_name:str = None, data: pd.DataFrame = None, price_scale = None, **kwargs) -> Series:
+  def mark_histogram(self, series_name:str = None, data: pd.DataFrame = None, price_scale: Optional[PriceScaleOptions] = None, **kwargs) -> Series:
     """Add A Histogram Series."""
     return self.add(
         Series(chart=self,
